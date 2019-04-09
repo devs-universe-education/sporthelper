@@ -1,7 +1,16 @@
 namespace SportHelper
 {
 	public enum AppPages {
-		Main
+		Main,
+		Login,
+		Register,
+		StatProfile,
+		ViewProfile,
+		AboutProgram,
+		MainMenu,
+		EditTraining,
+		ListTraining,
+		StartTraining
 	}
 
 	public enum NavigationMode {
