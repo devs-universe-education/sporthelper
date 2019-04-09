@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,7 +9,7 @@ using Xamarin.Forms.Xaml;
 
 namespace SportHelper.UI.Pages.Training {
 	[XamlCompilation(XamlCompilationOptions.Compile)]
-	public partial class ListTrainingPage : ContentPage {
+	public partial class ListTrainingPage : BasePage {
 		public ListTrainingPage() {
 			InitializeComponent();
 		}
