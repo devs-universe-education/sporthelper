@@ -3,12 +3,11 @@
 			 xmlns:pages="clr-namespace:SportHelper.UI.Pages"
 			 xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="SportHelper.UI.Pages.Account.ViewProfilePage">
+             x:Class="SportHelper.UI.Pages.Account.ViewProfilePage"
+			 Title="ViewProfile">
     <ContentPage.Content>
         <StackLayout>
-            <Label Text="Welcome to Xamarin.Forms!"
-                VerticalOptions="CenterAndExpand" 
-                HorizontalOptions="CenterAndExpand" />
-        </StackLayout>
+			<Button Text="go to StatProfile" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" Command="{Binding GoToStatProfile} "></Button>
+		</StackLayout>
     </ContentPage.Content>
 </pages:BasePage>

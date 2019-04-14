@@ -3,7 +3,8 @@
 			 xmlns:pages="clr-namespace:SportHelper.UI.Pages"
 			 xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="SportHelper.UI.Pages.Account.StatProfilePage">
+             x:Class="SportHelper.UI.Pages.Account.StatProfilePage"
+			 Title="StatProfile">
     <ContentPage.Content>
         <StackLayout>
             <Label Text="Welcome to Xamarin.Forms!"
