@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <pages:BasePage
-			 xmlns:pages="clr-namespace:SportHelper.UI.Pages"
-			 xmlns="http://xamarin.com/schemas/2014/forms"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="SportHelper.UI.Pages.Training.EditTrainingPage">
+			xmlns:pages="clr-namespace:SportHelper.UI.Pages"
+			xmlns="http://xamarin.com/schemas/2014/forms"
+            xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+            x:Class="SportHelper.UI.Pages.Training.EditTrainingPage"
+			Title="EditTraining">
     <ContentPage.Content>
         <StackLayout>
             <Label Text="Welcome to Xamarin.Forms!"

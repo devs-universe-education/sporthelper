@@ -1,14 +1,43 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <pages:BasePage
-			 xmlns:pages="clr-namespace:SportHelper.UI.Pages"
-			 xmlns="http://xamarin.com/schemas/2014/forms"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="SportHelper.UI.Pages.Menu.MainMenuPage">
+			xmlns:pages="clr-namespace:SportHelper.UI.Pages" 
+			xmlns="http://xamarin.com/schemas/2014/forms"
+            xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+            x:Class="SportHelper.UI.Pages.Menu.MainMenuPage"
+			Title="MainMenu">
     <ContentPage.Content>
         <StackLayout>
             <Label Text="Welcome to Xamarin.Forms!"
                 VerticalOptions="CenterAndExpand" 
                 HorizontalOptions="CenterAndExpand" />
+
+			<Button
+				Text="Go To ListTraining"
+				Command="{Binding GoToListTraining}"
+				VerticalOptions="CenterAndExpand" 
+				HorizontalOptions="CenterAndExpand"
+			/>
+
+			<Button
+				Text="Go To ViewProfile"
+				Command="{Binding GoToViewProfile}}"
+				VerticalOptions="CenterAndExpand" 
+				HorizontalOptions="CenterAndExpand"
+			/>
+			
+			<Button
+				Text="Go to AboutProgram"
+				Command="{Binding GoToAboutProgram}"
+				VerticalOptions="CenterAndExpand" 
+				HorizontalOptions="CenterAndExpand"
+			/>
+
+			<Button
+				Text="Go to Login"
+				Command="{Binding GoToLogin}}"
+				VerticalOptions="CenterAndExpand" 
+				HorizontalOptions="CenterAndExpand"
+			/>
         </StackLayout>
     </ContentPage.Content>
 </pages:BasePage>

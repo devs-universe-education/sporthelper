@@ -1,6 +1,7 @@
 using Android.App;
 using Android.Content.PM;
 using Android.OS;
+using Acr.UserDialogs;
 
 namespace SportHelper.Android
 {
@@ -13,6 +14,8 @@ namespace SportHelper.Android
             ToolbarResource = Resource.Layout.Toolbar;
 
             base.OnCreate(bundle);
+
+			UserDialogs.Init(this);
 
             global::Xamarin.Forms.Forms.Init(this, bundle);
             LoadApplication(new App());
