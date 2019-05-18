@@ -6,24 +6,87 @@
 			x:Class="SportHelper.UI.Pages.Training.ListTrainingPage"
 			Title="ListTraining">
     <ContentPage.Content >
-        <StackLayout>
-            <Label Text="Welcome to Xamarin.Forms!"
-                VerticalOptions="CenterAndExpand" 
-                HorizontalOptions="CenterAndExpand" />
+		<Grid >
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="1*"/>
+				<ColumnDefinition Width="2*"/>
+				<ColumnDefinition Width="1*"/>
+			</Grid.ColumnDefinitions>
+
+			<Grid.RowDefinitions>
+				<RowDefinition Height="1*"/>
+				<RowDefinition Height="80"/>
+				<RowDefinition Height="1*"/>
+				<RowDefinition Height="24"/>
+				<RowDefinition Height="0.2*"/>
+				<RowDefinition Height="8*"/>
+				<RowDefinition Height="0.5*"/>
+				<RowDefinition Height="48"/>
+				<RowDefinition Height="0.5*"/>
+				<RowDefinition Height="48"/>
+				<RowDefinition Height="0.5*"/>
+				<RowDefinition Height="48"/>
+				<RowDefinition Height="0.5*"/>
+			</Grid.RowDefinitions>
+
+			<StackLayout Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="3" >
+				<Button
+					Text="+"
+					FontSize="24"
+					WidthRequest = "70"
+					HeightRequest = "70"
+					BorderRadius = "45"
+					HorizontalOptions="CenterAndExpand"
+					BackgroundColor="#84cded"
+					TextColor="White"
+					Command="{Binding GoToEditTraining}"/>
+			</StackLayout>
+
+			<Label Grid.Column="0"
+				   Grid.Row="3"
+				   Grid.ColumnSpan="3"
+				   Text="Список тренировок"
+				   FontSize="18"
+				   XAlign="Center"/>
+
+			<ListView
+				Grid.Column="0"
+				Grid.ColumnSpan="3"
+				Grid.Row="5"
+                ItemsSource="{Binding Items}">
+				<ListView.ItemTemplate>
+					<DataTemplate>
+						<ViewCell >
+							<Label Text = "{Binding Name}" FontSize="18" TextColor="Black" />
+						</ViewCell>
+					</DataTemplate>
+				</ListView.ItemTemplate>
+			</ListView>
 
 			<Button
+				Grid.Row="7"
+				Grid.Column="1"
 				Text="Go to StartTraining"
-				Command="{Binding GoToEditTraining}"
-				VerticalOptions="CenterAndExpand" 
-				HorizontalOptions="CenterAndExpand"
-			/>
+				Command="{Binding GoToStartTraining}}"
+				
+				BackgroundColor="#84cded"
+				TextColor="White"/>
 
 			<Button
+				Grid.Row="9"
+				Grid.Column="1"
 				Text="Go to EditTraining"
-				Command="{Binding GoToStartTraining}}"
-				VerticalOptions="CenterAndExpand" 
-				HorizontalOptions="CenterAndExpand"
-			/>
-		</StackLayout>
-    </ContentPage.Content>
+				Command="{Binding GoToEditTraining}"
+				BackgroundColor="#84cded"
+				TextColor="White"/>
+
+			<Button
+				Grid.Row="11"
+				Grid.Column="1"
+				BackgroundColor="#84cded"
+				TextColor="White"
+				Text="Test"
+                Command="{Binding Test}"/>
+		</Grid>
+	</ContentPage.Content>
 </pages:BasePage>

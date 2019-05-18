@@ -6,10 +6,133 @@
             x:Class="SportHelper.UI.Pages.Training.EditTrainingPage"
 			Title="EditTraining">
     <ContentPage.Content>
-        <StackLayout>
-            <Label Text="Welcome to Xamarin.Forms!"
-                VerticalOptions="CenterAndExpand" 
-                HorizontalOptions="CenterAndExpand" />
-        </StackLayout>
-    </ContentPage.Content>
+		<Grid>
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="1*"/>
+				<ColumnDefinition Width="1*"/>
+				<ColumnDefinition Width="1*"/>
+				<ColumnDefinition Width="1*"/>
+				<ColumnDefinition Width="1*"/>
+				<ColumnDefinition Width="1*"/>
+				<ColumnDefinition Width="1*"/>
+			</Grid.ColumnDefinitions>
+
+			<Grid.RowDefinitions>
+				<RowDefinition Height="1*"/>
+				<RowDefinition Height="40"/>
+				<RowDefinition Height="1*"/>
+				<RowDefinition Height="40"/>
+				<RowDefinition Height="1*"/>
+				<RowDefinition Height="40"/>
+				<RowDefinition Height="1*"/>
+				<RowDefinition Height="40"/>
+				<RowDefinition Height="1*"/>
+				<RowDefinition Height="40"/>
+				<RowDefinition Height="1*"/>
+				<RowDefinition Height="150"/>
+				<RowDefinition Height="1*"/>
+				<RowDefinition Height="48"/>
+				<RowDefinition Height="1*"/>
+			</Grid.RowDefinitions>
+
+			<Entry 
+                Grid.Column="1"
+                Grid.Row="1"
+                Grid.ColumnSpan="5"
+                FontSize="18"
+				HorizontalTextAlignment="Center"
+                Placeholder="Название тренировки"
+            />
+
+
+			<Label
+                Grid.Row="3"
+                Grid.Column="1"
+                Grid.ColumnSpan="3"
+                Text="Подготовка:"
+                FontSize="18"
+             />
+
+			<Entry 
+                Grid.Column="4"
+                Grid.Row="3"
+                Grid.ColumnSpan="2"
+                FontSize="18"
+                Text="00:00"
+                HorizontalTextAlignment="Center"
+            />
+
+			<Label
+                Grid.Row="5"
+                Grid.Column="1"
+                Grid.ColumnSpan="3"  
+                Text="Выполнение:"
+                FontSize="18"
+             />
+
+			<Entry 
+                Grid.Column="4"
+                Grid.Row="5"
+                Grid.ColumnSpan="2"
+                FontSize="18"
+                Text="00:00"
+                HorizontalTextAlignment="Center"
+                
+            />
+
+			<Label
+                Grid.Row="7"
+                Grid.Column="1"
+                Grid.ColumnSpan="3"  
+                Text="Отдых:"
+                FontSize="18"
+             />
+
+			<Entry 
+                Grid.Column="4"
+                Grid.Row="7"
+                Grid.ColumnSpan="2"
+                FontSize="18"
+                Text="00:00"
+                HorizontalTextAlignment="Center"
+                
+            />
+
+			<Label
+                Grid.Row="9"
+                Grid.Column="1"
+                Grid.ColumnSpan="3"  
+                FontSize="18"
+                Text="Циклы:"
+             />
+
+			<Entry 
+                Grid.Column="4"
+                Grid.Row="9"
+                Grid.ColumnSpan="2"
+                FontSize="18"
+                Text="00:00"
+                HorizontalTextAlignment="Center"
+                
+            />
+
+			<ListView
+                Grid.Column="0"
+                Grid.ColumnSpan="7"
+                Grid.Row="11"
+            />
+
+			<Button
+                Grid.Column="2"
+                Grid.ColumnSpan="3"
+                Grid.Row="13"
+                FontSize="18"
+                Text="Сохранить"
+                BackgroundColor="#84cded"
+				TextColor="White"
+            />
+
+
+		</Grid>
+	</ContentPage.Content>
 </pages:BasePage>
