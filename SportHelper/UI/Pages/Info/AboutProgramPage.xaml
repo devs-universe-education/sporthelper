@@ -6,10 +6,41 @@
              x:Class="SportHelper.UI.Pages.Info.AboutProgramPage"
 			 Title="AboutProgram">
     <ContentPage.Content>
-        <StackLayout>
-            <Label Text="Welcome to Xamarin.Forms!"
-                VerticalOptions="CenterAndExpand" 
-                HorizontalOptions="CenterAndExpand" />
-        </StackLayout>
-    </ContentPage.Content>
+		<Grid>
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="1*"/>
+				<ColumnDefinition Width="1*"/>
+				<ColumnDefinition Width="4*"/>
+				<ColumnDefinition Width="1*"/>
+				<ColumnDefinition Width="1*"/>
+			</Grid.ColumnDefinitions>
+
+			<Grid.RowDefinitions>
+				<RowDefinition Height="1.5*"/>
+				<RowDefinition Height="40"/>
+				<RowDefinition Height="1.5*"/>
+				<RowDefinition Height="4*"/>
+				<RowDefinition Height="1.5*"/>
+				
+			</Grid.RowDefinitions>
+
+			<Label Grid.Column="2"
+				   Grid.Row="1"
+				   Text="О приложении"
+				   FontSize="24"
+				   TextColor="Black"
+			/>
+
+			<Label Grid.Column="1"
+				   Grid.ColumnSpan="3"
+				   Grid.Row="3"
+				   Text="Здесь содержится информация о приложении.................."
+				   HorizontalTextAlignment="Center"
+				   FontSize="18"
+				   TextColor="Black"
+				   LineBreakMode="WordWrap"
+			/>
+			
+		</Grid>
+	</ContentPage.Content>
 </pages:BasePage>
