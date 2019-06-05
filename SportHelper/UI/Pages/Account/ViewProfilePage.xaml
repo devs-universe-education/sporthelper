@@ -4,9 +4,16 @@
 			 xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="SportHelper.UI.Pages.Account.ViewProfilePage"
+	         xmlns:control ="clr-namespace:SportHelper.UI.Controls"
 			 Title="ViewProfile">
-    <ContentPage.Content>
+	
+	<ContentPage.Content>
 		<Grid>
+			<Grid.Resources>
+				<ResourceDictionary>
+					<control:FocusedEventArgsToFocusedConverter x:Key="FocusedObj"/>
+				</ResourceDictionary>
+			</Grid.Resources>
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition Width="1*"/>
 				<ColumnDefinition Width="1*"/>
@@ -19,15 +26,15 @@
 				<RowDefinition Height="1.6*"/>
 				<RowDefinition Height="100"/>
 				<RowDefinition Height="1*"/>
-				<RowDefinition Height="38"/>
+				<RowDefinition Height="40"/>
 				<RowDefinition Height="0.3*"/>
-				<RowDefinition Height="38"/>
+				<RowDefinition Height="40"/>
 				<RowDefinition Height="0.3*"/>
-				<RowDefinition Height="38"/>
+				<RowDefinition Height="40"/>
 				<RowDefinition Height="0.3*"/>
-				<RowDefinition Height="38"/>
+				<RowDefinition Height="40"/>
 				<RowDefinition Height="0.3*"/>
-				<RowDefinition Height="38"/>
+				<RowDefinition Height="40"/>
 				<RowDefinition Height="1.6*"/>
 				<RowDefinition Height="54"/>
 				<RowDefinition Height="1.6*"/>
@@ -41,53 +48,126 @@
 				WidthRequest="80" HeightRequest="80"
 				Source="{Binding SampleObject.ImageUrl}"/>
 
-			<Entry x:Name="NameProfile"
-				   Placeholder="Имя"
-				   Grid.Column="1"
-				   FontSize="18"
-				   Grid.Row="3"
-				   Grid.ColumnSpan="3"/>
 
-			<Entry x:Name="AgeProfile"
-				   Placeholder="Возраст"
-				   Grid.Column="1"
-				   FontSize="18"
-				   Grid.Row="5"
-				   Grid.ColumnSpan="3"/>
+			<Entry 
+				Placeholder="Имя"
+				Grid.Column="2"
+				FontSize="18"
+				Grid.Row="3"
+				Grid.ColumnSpan="2"
+				HorizontalTextAlignment="Center"
+				Text="{Binding NameProfile}">
 
-			
-			<Entry x:Name="WeightProfile"
-				   Placeholder="Вес"
-				   Grid.Column="1"
-				   FontSize="18"
-				   Grid.Row="7"
-				   Grid.ColumnSpan="3"/>
 
-			
-			<Entry x:Name="GrowthProfile"
-				   Placeholder="Рост"
-				   Grid.Column="1"
-				   FontSize="18"
-				   Grid.Row="9"
-				   Grid.ColumnSpan="3"/>
+			</Entry>
 
-		
-			<Entry x:Name="BmiProfile"
-				   Placeholder="ИМТ"
-				   Grid.Column="1"
-				   FontSize="18"
-				   Grid.Row="11"
-				   Grid.ColumnSpan="3"/>
+
+			<Label
+				Text="Имя"
+				FontSize="18"
+				Grid.Column="0"
+				Grid.Row="3"
+				HorizontalTextAlignment="Center"
+				Grid.ColumnSpan="2"/>
+
+
+
+			<Entry 
+				Placeholder="Возраст"
+				Grid.Column="2"
+				FontSize="18"
+				Grid.Row="5"
+				Grid.ColumnSpan="2"
+				Keyboard="Numeric"
+				HorizontalTextAlignment="Center"
+				Text="{Binding AgeProfile}">
+				<Entry.Behaviors>
+					<control:NumericValidationBehavior/>
+				</Entry.Behaviors>
+			</Entry>
+
+			<Label
+				Text="Возраст"
+				FontSize="18"
+				Grid.Column="0"
+				Grid.Row="5"
+				HorizontalTextAlignment="Center"
+				Grid.ColumnSpan="2"/>
+
+
+			<Entry 
+				Placeholder="Вес"
+				Grid.Column="2"
+				FontSize="18"
+				Grid.Row="7"				   
+				Grid.ColumnSpan="2"
+				HorizontalTextAlignment="Center"
+				Text="{Binding WeightProfile}"
+				Keyboard="Numeric">
+				<Entry.Behaviors>
+					<control:NumericValidationBehavior Command ="{Binding GetBMIResult}" Converter="{StaticResource Key=FocusedObj}"/>
+				</Entry.Behaviors>
+			</Entry>
+
+			<Label
+				Text="Вес"
+				FontSize="18"
+				Grid.Column="0"
+				Grid.Row="7"
+				HorizontalTextAlignment="Center"
+				Grid.ColumnSpan="2"/>
+
+
+			<Entry 
+				Placeholder="Рост"
+				Grid.Column="2"
+				FontSize="18"
+				Grid.Row="9"
+				Grid.ColumnSpan="2"
+				Keyboard="Numeric"
+				HorizontalTextAlignment="Center"
+				Text="{Binding GrowthProfile}">
+				<Entry.Behaviors>
+					<control:NumericValidationBehavior Command="{Binding GetBMIResult}" Converter="{StaticResource Key=FocusedObj}"/>
+				</Entry.Behaviors>
+			</Entry>
+
+			<Label
+				Text="Рост"
+				FontSize="18"
+				Grid.Column="0"
+				Grid.Row="9"
+				HorizontalTextAlignment="Center"
+				Grid.ColumnSpan="2"/>
+
+
+			<Entry
+				Placeholder="ИМТ"
+				Grid.Column="2"
+				FontSize="18"
+				Grid.Row="11"
+				Grid.ColumnSpan="2"
+				HorizontalTextAlignment="Center"
+				IsReadOnly="True"
+				Text="{Binding BMIProfile}"/>
+
+			<Label
+				Text="ИМТ"
+				FontSize="18"
+				Grid.Column="0"
+				Grid.Row="11"
+				HorizontalTextAlignment="Center"
+				Grid.ColumnSpan="2"/>
 
 
 			<Button Text="go to StatProfile"
-					VerticalOptions="CenterAndExpand"
-					HorizontalOptions="CenterAndExpand"
-					Command="{Binding GoToStatProfile} "
-					BackgroundColor="#84cded"
-					TextColor="White"
-					Grid.Column="2"
-					Grid.Row="13"
+				VerticalOptions="CenterAndExpand"
+				HorizontalOptions="CenterAndExpand"
+				Command="{Binding GoToStatProfile} "
+				BackgroundColor="#84cded"
+				TextColor="White"
+				Grid.Column="2"
+				Grid.Row="13"
 			/>
 
 		</Grid>

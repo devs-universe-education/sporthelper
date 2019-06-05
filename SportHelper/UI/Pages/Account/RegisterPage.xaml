@@ -37,6 +37,7 @@
 
 			
 			<Entry x:Name="NameProfile"
+				   Text="{Binding LoginReg}"
 				   Grid.Column="1"
 				   FontSize="18"
 				   Grid.Row="3"
@@ -44,16 +45,18 @@
 				   Grid.ColumnSpan="3"/>
 						
 			<Entry x:Name="PasswordProfile"
+				   Text="{Binding PasswordReg}"
+				   IsPassword="True"
 				   Grid.Column="1"
 				   FontSize="18"
 				   Grid.Row="5"
 				   Placeholder="Пароль"
 				   Grid.ColumnSpan="3"/>
 
-			<Button	Text="go to MainMenu"
+			<Button	Text="Зарегестрироваться"
 					VerticalOptions="CenterAndExpand"
 					HorizontalOptions="CenterAndExpand"
-					Command="{Binding GoToMainMenu} "
+					Command="{Binding GetUserRegister} "
 					Grid.Column="2"
 					Grid.Row="7"
 					BackgroundColor="#84cded"

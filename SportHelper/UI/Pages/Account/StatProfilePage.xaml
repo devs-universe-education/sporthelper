@@ -4,8 +4,22 @@
 			 xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="SportHelper.UI.Pages.Account.StatProfilePage"
+		     xmlns:control ="clr-namespace:SportHelper.UI.Controls"
+		 	 xmlns:views ="clr-namespace:SkiaSharp.Views.Forms;assembly=SkiaSharp.Views.Forms"
 			 Title="StatProfile">
     <ContentPage.Content>
+		
+		<StackLayout>
+			<Label Text="Этот экран в разработке, но в скором времени будет в рабочем состоянии"
+				   VerticalOptions="CenterAndExpand"
+				   HorizontalTextAlignment="Center"
+				   FontSize="20"/>
+			<Image Source="cat.png" VerticalOptions="CenterAndExpand"/>
+		</StackLayout>
+
+		
+		
+		<!--
 		<Grid>
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition Width="1*"/>
@@ -94,6 +108,6 @@
 				   Grid.Row="9"
 				   Text="-3 кг/мес."
 				   Grid.ColumnSpan="2"/>
-		</Grid>
+		</Grid>-->
 	</ContentPage.Content>
 </pages:BasePage>

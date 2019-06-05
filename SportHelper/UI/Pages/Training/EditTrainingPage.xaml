@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<pages:BasePage
-			xmlns:pages="clr-namespace:SportHelper.UI.Pages"
-			xmlns="http://xamarin.com/schemas/2014/forms"
-            xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-            x:Class="SportHelper.UI.Pages.Training.EditTrainingPage"
-			Title="EditTraining">
-    <ContentPage.Content>
+<pages:BasePage 
+xmlns:pages="clr-namespace:SportHelper.UI.Pages" 
+xmlns="http://xamarin.com/schemas/2014/forms" 
+xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
+x:Class="SportHelper.UI.Pages.Training.EditTrainingPage"
+xmlns:control ="clr-namespace:SportHelper.UI.Controls"
+Title="EditTraining">
+	<ContentPage.Content>
 		<Grid>
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition Width="1*"/>
@@ -18,7 +19,11 @@
 			</Grid.ColumnDefinitions>
 
 			<Grid.RowDefinitions>
-				<RowDefinition Height="1*"/>
+				<RowDefinition Height="0.2*"/>
+				<RowDefinition Height="40"/>
+				<RowDefinition Height="0.2*"/>
+				<RowDefinition Height="38"/>
+				<RowDefinition Height="1.2*"/>
 				<RowDefinition Height="40"/>
 				<RowDefinition Height="1*"/>
 				<RowDefinition Height="40"/>
@@ -27,9 +32,9 @@
 				<RowDefinition Height="1*"/>
 				<RowDefinition Height="40"/>
 				<RowDefinition Height="1*"/>
-				<RowDefinition Height="40"/>
+				<RowDefinition Height="48"/>
 				<RowDefinition Height="1*"/>
-				<RowDefinition Height="150"/>
+				<RowDefinition Height="80"/>
 				<RowDefinition Height="1*"/>
 				<RowDefinition Height="48"/>
 				<RowDefinition Height="1*"/>
@@ -42,96 +47,247 @@
                 FontSize="18"
 				HorizontalTextAlignment="Center"
                 Placeholder="Название тренировки"
+				Text="{Binding NameTraining}"
+            />
+
+			<Entry 
+                Grid.Column="1"
+                Grid.Row="3"
+                Grid.ColumnSpan="5"
+                FontSize="16"
+				HorizontalTextAlignment="Center"
+                Placeholder="Название упражнения"
+				Text="{Binding NameExercise}"
             />
 
 
 			<Label
-                Grid.Row="3"
+                Grid.Row="5"
                 Grid.Column="1"
                 Grid.ColumnSpan="3"
                 Text="Подготовка:"
-                FontSize="18"
+                FontSize="16"
              />
 
-			<Entry 
-                Grid.Column="4"
-                Grid.Row="3"
-                Grid.ColumnSpan="2"
-                FontSize="18"
-                Text="00:00"
+			<StackLayout
+				Orientation="Horizontal"
+				Grid.Column="4"
+                Grid.Row="5"
+                Grid.ColumnSpan="3">
+
+				<Button
+				WidthRequest = "40" 
+				HeightRequest = "40"
+                FontSize="16"
+				BorderRadius = "45"
+                Text="-"
+                BackgroundColor="#A5A5A5"
+				TextColor="White"
+				Command="{Binding PreparationMinus}"
+				
+				/>
+				
+				<Entry 
+                FontSize="16"
+                Placeholder="00:00"
                 HorizontalTextAlignment="Center"
-            />
+				IsReadOnly="True"
+				Text="{Binding PreparationEntry}"
+                />
+
+				<Button
+					WidthRequest = "40" 
+					HeightRequest = "40"
+					BorderRadius = "45"
+					FontSize="16"
+					Text="+"
+			        BackgroundColor="#A5A5A5"
+					TextColor="White"
+					Command="{Binding PreparationPlus}"
+				/>
+			</StackLayout>
 
 			<Label
-                Grid.Row="5"
+                Grid.Row="7"
                 Grid.Column="1"
                 Grid.ColumnSpan="3"  
                 Text="Выполнение:"
-                FontSize="18"
+                FontSize="16"
              />
+			
+			<StackLayout
+				Orientation="Horizontal"
+				Grid.Column="4"
+                Grid.Row="7"
+                Grid.ColumnSpan="3">
+				
+				<Button
+				WidthRequest = "40" 
+				HeightRequest = "40"
+                FontSize="16"
+				BorderRadius = "45"
+                Text="-"
+                BackgroundColor="#A5A5A5"
+				TextColor="White"
+				Command="{Binding PerformanceMinus}"
+					/>
 
-			<Entry 
-                Grid.Column="4"
-                Grid.Row="5"
-                Grid.ColumnSpan="2"
-                FontSize="18"
-                Text="00:00"
+				<Entry 
+                FontSize="16"
+                Placeholder="00:00"
                 HorizontalTextAlignment="Center"
-                
-            />
+				IsReadOnly="True"
+				Text="{Binding PerformanceEntry}"
+                />
+				
+				<Button
+					WidthRequest = "40" 
+					HeightRequest = "40"
+					BorderRadius = "45"
+					FontSize="16"
+					Text="+"
+			        BackgroundColor="#A5A5A5"
+					TextColor="White"
+					Command="{Binding PerformancePlus}"
+				/>
+				
+			</StackLayout>
 
 			<Label
-                Grid.Row="7"
+                Grid.Row="9"
                 Grid.Column="1"
                 Grid.ColumnSpan="3"  
                 Text="Отдых:"
-                FontSize="18"
+                FontSize="16"
              />
+			<StackLayout
+				Orientation="Horizontal"
+				Grid.Column="4"
+                Grid.Row="9"
+                Grid.ColumnSpan="3">
 
-			<Entry 
-                Grid.Column="4"
-                Grid.Row="7"
-                Grid.ColumnSpan="2"
-                FontSize="18"
-                Text="00:00"
+				<Button
+				WidthRequest = "40" 
+				HeightRequest = "40"
+                FontSize="16"
+				 BorderRadius = "45"
+                Text="-"
+                BackgroundColor="#A5A5A5"
+				TextColor="White"
+				Command="{Binding RelaxationMinus}"
+				/>
+				<Entry 
+                FontSize="16"
+                Placeholder="00:00"
+				IsReadOnly="True"
                 HorizontalTextAlignment="Center"
-                
-            />
+				Text="{Binding RelaxationEntry}"
+				/>
+				<Button
+					WidthRequest = "40" 
+					HeightRequest = "40"
+					BorderRadius = "45"
+					FontSize="16"
+					Text="+"
+			        BackgroundColor="#A5A5A5"
+					TextColor="White"
+					Command="{Binding RelaxationPlus}"
+				/>
+			</StackLayout>
 
 			<Label
-                Grid.Row="9"
+                Grid.Row="11"
                 Grid.Column="1"
                 Grid.ColumnSpan="3"  
-                FontSize="18"
+                FontSize="16"
                 Text="Циклы:"
              />
-
-			<Entry 
-                Grid.Column="4"
-                Grid.Row="9"
-                Grid.ColumnSpan="2"
-                FontSize="18"
-                Text="00:00"
-                HorizontalTextAlignment="Center"
-                
-            />
-
-			<ListView
-                Grid.Column="0"
-                Grid.ColumnSpan="7"
+			<StackLayout
+				Orientation="Horizontal"
+				 Grid.Column="4"
                 Grid.Row="11"
+                Grid.ColumnSpan="3">
+
+				<Button
+				WidthRequest = "40" 
+				HeightRequest = "40"
+                FontSize="16"
+				 BorderRadius = "45"
+                Text="-"
+                BackgroundColor="#A5A5A5"
+				TextColor="White"
+				Command="{Binding RepeatMinus}"
+				/>
+				<Entry 
+               
+                FontSize="16"
+                Placeholder="00:00"
+				IsReadOnly="True"
+                HorizontalTextAlignment="Center"
+                Text="{Binding RepeatEntry}"
             />
+				<Button
+					WidthRequest = "40" 
+					HeightRequest = "40"
+					BorderRadius = "45"
+					FontSize="16"
+					Text="+"
+			       BackgroundColor="#A5A5A5"
+					TextColor="White"
+					Command="{Binding RepeatPlus}"
+				/>
+			</StackLayout>
 
 			<Button
                 Grid.Column="2"
                 Grid.ColumnSpan="3"
                 Grid.Row="13"
                 FontSize="18"
+                Text="+"
+                BackgroundColor="#84cded"
+				TextColor="White"
+				Command="{Binding AddingExercise}"
+            />
+
+			<ListView
+				Grid.Column="0"
+                Grid.ColumnSpan="7"
+                Grid.Row="15"
+				ItemsSource= "{Binding ExerciseList}"
+				SelectedItem="{Binding SelectExercise}">
+				<ListView.Behaviors>
+					<control:ListViewItemSelectedBehavior/>
+				</ListView.Behaviors>
+				<ListView.ItemTemplate>
+					<DataTemplate>
+						<ViewCell >
+							<Grid>
+								<Grid.RowDefinitions>
+									<RowDefinition Height="Auto" />
+								</Grid.RowDefinitions>
+								<Grid.ColumnDefinitions>
+									<ColumnDefinition Width="1*"/>
+								</Grid.ColumnDefinitions>
+								<Label Text = "{Binding NameExercise}" FontSize="16" TextColor="Black"  Grid.Column="0" HorizontalTextAlignment="Center"/>
+							</Grid>
+						</ViewCell>
+					</DataTemplate>
+				</ListView.ItemTemplate>
+			</ListView>
+                
+				
+            
+
+			<Button
+                Grid.Column="2"
+                Grid.ColumnSpan="3"
+                Grid.Row="17"
+                FontSize="18"
                 Text="Сохранить"
                 BackgroundColor="#84cded"
 				TextColor="White"
+				Command="{Binding SaveTraining}"
             />
-
 
 		</Grid>
 	</ContentPage.Content>
