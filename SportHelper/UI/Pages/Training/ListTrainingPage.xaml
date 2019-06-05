@@ -1,12 +1,18 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <pages:BasePage
-			xmlns:pages="clr-namespace:SportHelper.UI.Pages"
-			xmlns="http://xamarin.com/schemas/2014/forms"
-			xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-			x:Class="SportHelper.UI.Pages.Training.ListTrainingPage"
-			Title="ListTraining">
-    <ContentPage.Content >
+      xmlns:pages="clr-namespace:SportHelper.UI.Pages"
+      xmlns="http://xamarin.com/schemas/2014/forms"
+      xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+      x:Class="SportHelper.UI.Pages.Training.ListTrainingPage"
+	  xmlns:b ="clr-namespace:SportHelper.UI.Controls"
+      Title="ListTraining">
+	<ContentPage.Content >
 		<Grid >
+			<Grid.Resources>
+				<ResourceDictionary>
+					<b:SelectedEventArgsToSelectedConverter x:Key="SelectedObj"/>
+				</ResourceDictionary>
+			</Grid.Resources>
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition Width="1*"/>
 				<ColumnDefinition Width="2*"/>
@@ -39,44 +45,57 @@
 					HorizontalOptions="CenterAndExpand"
 					BackgroundColor="#84cded"
 					TextColor="White"
-					Command="{Binding GoToEditTraining}"/>
+					Command="{Binding CreateNewTraining}"/>	
 			</StackLayout>
 
 			<Label Grid.Column="0"
-				   Grid.Row="3"
-				   Grid.ColumnSpan="3"
-				   Text="Список тренировок"
-				   FontSize="18"
-				   XAlign="Center"/>
+			   Grid.Row="3"
+			   Grid.ColumnSpan="3"
+			   Text="Список тренировок"
+			   FontSize="18"
+			   XAlign="Center"/>
+
 
 			<ListView
 				Grid.Column="0"
 				Grid.ColumnSpan="3"
 				Grid.Row="5"
-                ItemsSource="{Binding Items}">
+				ItemsSource= "{Binding TrainingList}"
+				SelectedItem= "{Binding SelectTraining}">
 				<ListView.ItemTemplate>
 					<DataTemplate>
 						<ViewCell >
-							<Label Text = "{Binding Name}" FontSize="18" TextColor="Black" />
+							<Grid>
+								<Grid.RowDefinitions>
+									<RowDefinition Height="Auto" />
+								</Grid.RowDefinitions>
+								<Grid.ColumnDefinitions>
+									<ColumnDefinition Width="1*" />
+									<ColumnDefinition Width="1*" />
+									<ColumnDefinition Width="1*" />
+								</Grid.ColumnDefinitions>
+								<Label Text = "{Binding NameTraining}" FontSize="18" TextColor="Black" Grid.Column="0" />
+							</Grid>
 						</ViewCell>
 					</DataTemplate>
 				</ListView.ItemTemplate>
+
 			</ListView>
 
 			<Button
 				Grid.Row="7"
 				Grid.Column="1"
-				Text="Go to StartTraining"
-				Command="{Binding GoToStartTraining}}"
-				
+				Text="Начать тренировку"
+				Command="{Binding GoToStartTraining}"
+      
 				BackgroundColor="#84cded"
 				TextColor="White"/>
 
 			<Button
 				Grid.Row="9"
 				Grid.Column="1"
-				Text="Go to EditTraining"
-				Command="{Binding GoToEditTraining}"
+				Text="Изменить"
+				Command="{Binding EditTraining}"
 				BackgroundColor="#84cded"
 				TextColor="White"/>
 
@@ -85,8 +104,8 @@
 				Grid.Column="1"
 				BackgroundColor="#84cded"
 				TextColor="White"
-				Text="Test"
-                Command="{Binding Test}"/>
+				Text="Удалить"
+                Command="{Binding CreateNewTraining}"/>
 		</Grid>
 	</ContentPage.Content>
 </pages:BasePage>
