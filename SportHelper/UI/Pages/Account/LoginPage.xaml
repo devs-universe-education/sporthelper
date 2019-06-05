@@ -41,12 +41,17 @@
 			/>
 
 			<Entry x:Name="Login"
+				   Placeholder="Логин"
+				   Text="{Binding LoginAuto}"
 				   Grid.Column="1"
 				   FontSize="24"
 				   Grid.Row="3"
 				   Grid.ColumnSpan="3"/>
 
 			<Entry x:Name="Password"
+				   Placeholder="Пароль"
+				   IsPassword="True"
+				   Text="{Binding PasswordAuto}"
 				   Grid.Column="1"
 				   FontSize="24"
 				   Grid.Row="5"
@@ -61,7 +66,7 @@
 			/>
 			<Switch Grid.Column="3"
 					Grid.Row="7"
-					IsToggled="True"
+					IsToggled="{Binding CheckRemember}"
 			/>
 			
 			<!--
@@ -70,20 +75,22 @@
 			<Button
 				Grid.Column="2"
 				Grid.Row="9"
-				Text="go to Register"
+				Text="Авторизоваться"
+				BackgroundColor="#84cded"
+				TextColor="White"
+				Command="{Binding GetUserAutorisation}"/>
+
+			<Button
+				Grid.Column="2"
+				Grid.Row="11"
+				Text="Регистрация"
 				BackgroundColor="#84cded"
 				TextColor="White"
 				Command="{Binding GoToRegister}"
 				/>
 				
 			
-			<Button
-				Grid.Column="2"
-				Grid.Row="11"
-				Text="go to MainMenu"
-				BackgroundColor="#84cded"
-				TextColor="White"
-				Command="{Binding GoToMainMenu}"/>
+			
 			<!--
 			</StackLayout>
 			-->
