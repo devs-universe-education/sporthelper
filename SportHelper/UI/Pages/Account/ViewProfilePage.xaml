@@ -105,7 +105,7 @@
 				Text="{Binding WeightProfile}"
 				Keyboard="Numeric">
 				<Entry.Behaviors>
-					<control:NumericValidationBehavior Command ="{Binding GetBMIResult}" Converter="{StaticResource Key=FocusedObj}"/>
+					<control:NumericValidationBehavior Command ="{Binding ChangeWeight}" Converter="{StaticResource Key=FocusedObj}"/>
 				</Entry.Behaviors>
 			</Entry>
 

@@ -5,6 +5,7 @@ using SportHelper.DAL.DataServices;
 using System.Collections.ObjectModel;
 using Xamarin.Forms;
 using System;
+using System.Linq;
 
 namespace SportHelper.BL.ViewModels.Training {
 	class EditTrainingViewModel : BaseViewModel {
@@ -19,8 +20,8 @@ namespace SportHelper.BL.ViewModels.Training {
 			ExerciseList.Clear();
 		}
 
-		public TrainingDataObject SelectExercise {
-			get => Get<TrainingDataObject>();
+		public ExerciseDataObject SelectExercise {
+			get => Get<ExerciseDataObject>();
 			set => Set(value);
 		}
 
@@ -54,7 +55,11 @@ namespace SportHelper.BL.ViewModels.Training {
 			set => Set(value);
 		}
 
+		
+
 		CurrentUserDataObject _currUser;
+
+		
 
 		public ICommand PreparationMinus => MakeCommand(PreparationMinusExecute);
 		public ICommand PreparationPlus => MakeCommand(PreparationPlusExecute);
@@ -65,8 +70,20 @@ namespace SportHelper.BL.ViewModels.Training {
 		public ICommand RepeatMinus => MakeCommand(RepeatMinusExecute);
 		public ICommand RepeatPlus => MakeCommand(RepeatPlusExecute);
 
+		public ICommand ChangeSelectExercise => MakeCommand(ChangeSelectExerciseExecute);
+
 		public ICommand AddingExercise => MakeCommand(AddingExerciseExecute);
 		public ICommand SaveTraining => new Command(execute: async () => {
+
+			if(SelectExercise != null) {
+				SelectExercise.NameExercise = NameExercise;
+				SelectExercise.TimePrepare = GetTimeFromString(PreparationEntry);
+				SelectExercise.TimeRest = GetTimeFromString(RelaxationEntry);
+				SelectExercise.TimeWorking = GetTimeFromString(PerformanceEntry);
+				SelectExercise.Cirle = Convert.ToInt32(RepeatEntry);
+				var index = ExerciseList.IndexOf(ExerciseList.Where(X => X.Id == SelectExercise.Id).FirstOrDefault());
+				ExerciseList[index] = SelectExercise;
+			}
 
 			if(_currUser.Id_training == 0) {
 				await DataServices.SportHelperDataService.ExecuteAsync("INSERT INTO TrainingTable(NameTraining, id_account) VALUES('" + NameTraining + "', " + _currUser.Id_account + ")", CancellationToken);
@@ -92,14 +109,17 @@ namespace SportHelper.BL.ViewModels.Training {
 							"TimeWorking = " + item.TimeWorking + "," +
 							"TimeRest = " + item.TimeRest + "," +
 							"Circle = " + item.Cirle + " " +
-							"WHERE Id = " + item.Id, CancellationToken);
+							"WHERE id_exercise = " + item.Id, CancellationToken);
 					}
 				}
+				NavigateTo(AppPages.ListTraining);
 
 			}
 
 			
 		});
+
+		
 
 		public async override Task OnPageAppearing() {
 			PreparationEntry = "00:05";
@@ -271,12 +291,25 @@ namespace SportHelper.BL.ViewModels.Training {
 			});
 			_i++;
 		}
-		void SaveTrainingExecute() {
 
-			
+		void ChangeSelectExerciseExecute() {
+			NameExercise = SelectExercise.NameExercise;
+			PreparationEntry = string.Format("{0:00}:{1:00}", SelectExercise.TimePrepare / 60, SelectExercise.TimePrepare % 60);
+			PerformanceEntry = string.Format("{0:00}:{1:00}", SelectExercise.TimeWorking / 60, SelectExercise.TimeWorking % 60);
+			RelaxationEntry = string.Format("{0:00}:{1:00}", SelectExercise.TimeRest / 60, SelectExercise.TimeRest % 60);
+			RepeatEntry = SelectExercise.Cirle.ToString();
+
 		}
 
-		
+		int GetTimeFromString(string time) {
+			var minSec = time.Split(':');
+			var min = Convert.ToInt32(minSec[0]);
+			var sec = Convert.ToInt32(minSec[1]);
+			sec += min * 60;
+			return sec;
+		}
+
+
 	}
 }
   

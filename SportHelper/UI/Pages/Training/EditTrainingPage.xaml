@@ -8,6 +8,11 @@ xmlns:control ="clr-namespace:SportHelper.UI.Controls"
 Title="EditTraining">
 	<ContentPage.Content>
 		<Grid>
+			<Grid.Resources>
+				<ResourceDictionary>
+					<control:SelectedEventArgsToSelectedConverter x:Key="SelectedObj"/>
+				</ResourceDictionary>
+			</Grid.Resources>
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition Width="1*"/>
 				<ColumnDefinition Width="1*"/>
@@ -256,7 +261,7 @@ Title="EditTraining">
 				ItemsSource= "{Binding ExerciseList}"
 				SelectedItem="{Binding SelectExercise}">
 				<ListView.Behaviors>
-					<control:ListViewItemSelectedBehavior/>
+					<control:ListViewItemSelectedBehavior Command="{Binding ChangeSelectExercise}" Converter="{StaticResource Key=SelectedObj}"/>
 				</ListView.Behaviors>
 				<ListView.ItemTemplate>
 					<DataTemplate>

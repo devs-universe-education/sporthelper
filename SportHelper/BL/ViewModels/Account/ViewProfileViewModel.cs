@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using SportHelper.DAL.DataServices;
+using Xamarin.Forms;
 
 namespace SportHelper.BL.ViewModels.Account {
 	class ViewProfileViewModel : BaseViewModel {
@@ -10,6 +11,29 @@ namespace SportHelper.BL.ViewModels.Account {
 
 		public ICommand GoToStatProfile => MakeCommand(GoToStatProfileExecute);
 		public ICommand GetBMIResult => MakeCommand(GetBMIResultExecute);
+		public ICommand ChangeWeight => new Command(execute: async () => {
+			double weight;
+			string date;
+			var user = await DataServices.SportHelperDataService.GetCurrentUserAsync("SELECT * FROM CurrentUserTable", CancellationToken);
+			if (!string.IsNullOrEmpty(WeightProfile)) {
+				if (double.TryParse(WeightProfile, out weight)) {
+					date = DateTime.Now.ToString("dd.MM.yyyy");
+					var stat = await DataServices.SportHelperDataService.GetStatisticAsync("SELECT * FROM StatisticTable ", CancellationToken);
+					if (stat.Data.Count > 0) {
+						if (WeightProfile != stat.Data[stat.Data.Count - 1].Weight.ToString()) {
+							await DataServices.SportHelperDataService.ExecuteAsync("INSERT INTO StatisticTable (Weight, Date, id_account) VALUES ('" + weight.ToString() + "', '" + date + "', " + user.Data[0].Id_account + ")", CancellationToken);
+						}
+					}
+					else {
+						await DataServices.SportHelperDataService.ExecuteAsync("INSERT INTO StatisticTable (Weight, Date, id_account) VALUES ('" + weight.ToString() + "', '" + date + "', " + user.Data[0].Id_account + ")", CancellationToken);
+					}
+				}
+				else {
+					WeightProfile = "";
+				}
+			}
+			GetBMIResultExecute();
+		});
 
 
 		public string NameProfile {
@@ -56,26 +80,9 @@ namespace SportHelper.BL.ViewModels.Account {
 			double weight;
 			double growth;
 			int age;
-			string date;
 
 			var user = await DataServices.SportHelperDataService.GetCurrentUserAsync("SELECT * FROM CurrentUserTable", CancellationToken);
-			if (!string.IsNullOrEmpty(WeightProfile)) {
-				if (double.TryParse(WeightProfile, out weight)) {
-					date = DateTime.Now.ToString("dd.MM.yyyy");
-					var stat = await DataServices.SportHelperDataService.GetStatisticAsync("SELECT * FROM StatisticTable ", CancellationToken);
-					if(stat.Data.Count > 0) {
-						if(WeightProfile != stat.Data[stat.Data.Count - 1].Weight.ToString()) {
-							await DataServices.SportHelperDataService.ExecuteAsync("INSERT INTO StatisticTable (Weight, Date, id_account) VALUES ('" + weight.ToString() + "', '" + date + "', " + user.Data[0].Id_account + ")", CancellationToken);
-						}
-					}
-					else {
-						await DataServices.SportHelperDataService.ExecuteAsync("INSERT INTO StatisticTable (Weight, Date, id_account) VALUES ('" + weight.ToString() + "', '" + date + "', " + user.Data[0].Id_account + ")", CancellationToken);
-					}
-				}
-				else {
-					WeightProfile = "";
-				}
-			}
+			
 
 			if ((!string.IsNullOrEmpty(GrowthProfile)) && (!string.IsNullOrEmpty(WeightProfile))) {
 				if ((double.TryParse(WeightProfile, out weight)) && (double.TryParse(GrowthProfile, out growth))) {

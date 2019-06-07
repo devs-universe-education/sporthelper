@@ -101,6 +101,7 @@ namespace SportHelper.BL.ViewModels.Training {
 			if(_currentExercise == _nameExercise.Length) {
 				_timer.Stop();
 				ShowAlert("","Тренировка окончена","OK");
+				NavigateTo(AppPages.ListTraining);
 			}
 			_currentTime = _exercises[_currentExercise, _currentStep];
 		}
