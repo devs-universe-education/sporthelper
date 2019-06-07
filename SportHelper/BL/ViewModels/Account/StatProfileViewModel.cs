@@ -12,7 +12,7 @@ namespace SportHelper.BL.ViewModels.Account {
 	class StatProfileViewModel : BaseViewModel {
 
 		public ICommand OnPainting { get; private set; }
-
+		bool _check = false;
 		List<StatisticDataObject> _statistic;
 
 		public string AllTraining {
@@ -35,6 +35,7 @@ namespace SportHelper.BL.ViewModels.Account {
 			var currUser = await DataServices.SportHelperDataService.GetCurrentUserAsync("SELECT * FROM CurrentUserTable", CancellationToken);
 			var tmp = await DataServices.SportHelperDataService.GetStatisticAsync("SELECT * FROM StatisticTable Where id_account = " + currUser.Data[0].Id_account, CancellationToken);
 			_statistic = tmp.Data;
+			_check = true;
 			
 			
 		}
@@ -46,8 +47,8 @@ namespace SportHelper.BL.ViewModels.Account {
 
 		private void OnPaintingExecute(SKPaintSurfaceEventArgs e) {
 			float max;
-				float min;
-
+			float min;
+			while (!_check) ;
 			var surface = e.Surface;
 			var canvas = surface.Canvas;
 			canvas.Clear(SKColors.White);
