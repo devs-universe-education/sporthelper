@@ -56,7 +56,7 @@
 			<Button	Text="Зарегестрироваться"
 					VerticalOptions="CenterAndExpand"
 					HorizontalOptions="CenterAndExpand"
-					Command="{Binding GetUserRegister} "
+					Command="{Binding UserRegister} "
 					Grid.Column="2"
 					Grid.Row="7"
 					BackgroundColor="#84cded"

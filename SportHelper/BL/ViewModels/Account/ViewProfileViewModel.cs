@@ -1,22 +1,16 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using SportHelper.BL.DB;
-using SportHelper.BL.Model;
-using SportHelper.DAL.DataObjects;
 using SportHelper.DAL.DataServices;
-
 
 namespace SportHelper.BL.ViewModels.Account {
 	class ViewProfileViewModel : BaseViewModel {
 
-		DataBaseConnection _dataBase = new DataBaseConnection();
 		
 
 		public ICommand GoToStatProfile => MakeCommand(GoToStatProfileExecute);
 		public ICommand GetBMIResult => MakeCommand(GetBMIResultExecute);
+
 
 		public string NameProfile {
 			get => Get<string>();
@@ -42,50 +36,41 @@ namespace SportHelper.BL.ViewModels.Account {
 			set => Set(value);
 		}
 
-		public ViewProfileViewModel() {
-			var user = _dataBase.GetUser();
-			var statistic = _dataBase.db.Query<StatisticTable>("Select * from StatisticTable");
-			var profile = _dataBase.db.Query<AccountTable>("Select * from AccountTable Where id_account = " + user.Id_account);
+		public async override Task OnPageAppearing() {
+			var user = await DataServices.SportHelperDataService.GetCurrentUserAsync("SELECT * FROM CurrentUserTable", CancellationToken);
+			var statistic = await DataServices.SportHelperDataService.GetStatisticAsync("Select * from StatisticTable Where id_account = " + user.Data[0].Id_account, CancellationToken);
+			var profile = await DataServices.SportHelperDataService.GetAccountAsync("Select * from AccountTable Where id_account = " + user.Data[0].Id_account, CancellationToken);
+			NameProfile = profile.Data[0].Name;
+			if (statistic.Data.Count != 0)
+				WeightProfile = statistic.Data[statistic.Data.Count - 1].Weight.ToString();
+			if (profile.Data[0].Age != 0)
+				AgeProfile = profile.Data[0].Age.ToString();
 
-			NameProfile = profile[0].Name;
+			if (profile.Data[0].Growth != 0)
+				GrowthProfile = profile.Data[0].Growth.ToString();
 
-			if(statistic.Count != 0)
-				WeightProfile = statistic[statistic.Count - 1].Weight.ToString();
-			if(profile[0].Age != 0)
-				AgeProfile = profile[0].Age.ToString();
-
-			if (profile[0].Growth != 0)
-				GrowthProfile = profile[0].Growth.ToString();
-
-			BMIProfile = profile[0].BMI;
-
-
+			BMIProfile = profile.Data[0].BMI;
 		}
 
-		public override Task OnPageDissapearing() {
+		public async override Task OnPageDissapearing() {
 			double weight;
 			double growth;
 			int age;
 			string date;
 
-
-			var user = _dataBase.GetUser();
-
+			var user = await DataServices.SportHelperDataService.GetCurrentUserAsync("SELECT * FROM CurrentUserTable", CancellationToken);
 			if (!string.IsNullOrEmpty(WeightProfile)) {
 				if (double.TryParse(WeightProfile, out weight)) {
-
 					date = DateTime.Now.ToString("dd.MM.yyyy");
-					var stat = _dataBase.db.Query<StatisticTable>("SELECT * FROM StatisticTable ");
-
-					if (stat.Count > 0) {
-						if (WeightProfile != stat[stat.Count - 1].Weight.ToString()) {
-							_dataBase.db.Execute("INSERT INTO StatisticTable (Weight, Date, id_account) VALUES ('" + weight.ToString() + "', '" + date + "', " + user.Id_account + ")");
+					var stat = await DataServices.SportHelperDataService.GetStatisticAsync("SELECT * FROM StatisticTable ", CancellationToken);
+					if(stat.Data.Count > 0) {
+						if(WeightProfile != stat.Data[stat.Data.Count - 1].Weight.ToString()) {
+							await DataServices.SportHelperDataService.ExecuteAsync("INSERT INTO StatisticTable (Weight, Date, id_account) VALUES ('" + weight.ToString() + "', '" + date + "', " + user.Data[0].Id_account + ")", CancellationToken);
 						}
 					}
 					else {
-						_dataBase.db.Execute("INSERT INTO StatisticTable (Weight, Date, id_account) VALUES ('" + weight.ToString() + "', '" + date + "', " + user.Id_account + ")");
+						await DataServices.SportHelperDataService.ExecuteAsync("INSERT INTO StatisticTable (Weight, Date, id_account) VALUES ('" + weight.ToString() + "', '" + date + "', " + user.Data[0].Id_account + ")", CancellationToken);
 					}
-
 				}
 				else {
 					WeightProfile = "";
@@ -94,7 +79,7 @@ namespace SportHelper.BL.ViewModels.Account {
 
 			if ((!string.IsNullOrEmpty(GrowthProfile)) && (!string.IsNullOrEmpty(WeightProfile))) {
 				if ((double.TryParse(WeightProfile, out weight)) && (double.TryParse(GrowthProfile, out growth))) {
-					_dataBase.db.Execute("UPDATE AccountTable SET BMI = '" + BMIProfile + "' WHERE id_account = " + user.Id_account);
+					await DataServices.SportHelperDataService.ExecuteAsync("UPDATE AccountTable SET BMI = '" + BMIProfile + "' WHERE id_account = " + user.Data[0].Id_account, CancellationToken);
 				}
 				else {
 					GrowthProfile = "";
@@ -104,20 +89,18 @@ namespace SportHelper.BL.ViewModels.Account {
 
 			if (!string.IsNullOrEmpty(GrowthProfile)) {
 				if (double.TryParse(WeightProfile, out weight)) {
-					_dataBase.db.Execute("UPDATE AccountTable SET Growth = " + GrowthProfile + " WHERE id_account = " + user.Id_account);
+					await DataServices.SportHelperDataService.ExecuteAsync("UPDATE AccountTable SET Growth = " + GrowthProfile + " WHERE id_account = " + user.Data[0].Id_account, CancellationToken);
 				}
 			}
 
 			if (!string.IsNullOrEmpty(AgeProfile)) {
 				if (int.TryParse(AgeProfile, out age)) {
-					_dataBase.db.Execute("UPDATE AccountTable SET Age = " + AgeProfile + " WHERE id_account = " + user.Id_account);
+					await DataServices.SportHelperDataService.ExecuteAsync("UPDATE AccountTable SET Age = " + AgeProfile + " WHERE id_account = " + user.Data[0].Id_account, CancellationToken);
 				}
 			}
 
+			await DataServices.SportHelperDataService.ExecuteAsync("UPDATE AccountTable SET Name = '" + NameProfile + "' WHERE id_account = " + user.Data[0].Id_account, CancellationToken);
 
-			_dataBase.db.Execute("UPDATE AccountTable SET Name = '" + NameProfile + "' WHERE id_account = " + user.Id_account);
-			var profile = _dataBase.db.Query<AccountTable>("Select * from AccountTable Where id_account = " + user.Id_account);
-			return base.OnPageDissapearing();
 		}
 
 
@@ -132,6 +115,7 @@ namespace SportHelper.BL.ViewModels.Account {
 				}
 			}
 		}
+
 
 
 		void GoToStatProfileExecute() {

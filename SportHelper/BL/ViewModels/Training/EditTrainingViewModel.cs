@@ -2,37 +2,30 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using SportHelper.DAL.DataObjects;
 using SportHelper.DAL.DataServices;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.IO;
-using SportHelper.BL.Model;
-using SportHelper.Helpers;
 using Xamarin.Forms;
-using SportHelper.BL.ViewModels;
 using System;
-using SQLite;
-using SportHelper.BL.DB;
 
 namespace SportHelper.BL.ViewModels.Training {
 	class EditTrainingViewModel : BaseViewModel {
 
-		DataBaseConnection _dataBase = new DataBaseConnection();
+		int _i = 10000;
 		public int Prepare = 5;
 		public int Relax = 5;
 		public int Working = 5;
 
 		public EditTrainingViewModel() {
-			ExerciseList = new ObservableCollection<ExerciseTable>() { };
+			ExerciseList = new ObservableCollection<ExerciseDataObject>() { };
 			ExerciseList.Clear();
 		}
 
-		public TrainingTable SelectExercise {
-			get => Get<TrainingTable>();
+		public TrainingDataObject SelectExercise {
+			get => Get<TrainingDataObject>();
 			set => Set(value);
 		}
 
-		public ObservableCollection<ExerciseTable> ExerciseList {
-			get => Get<ObservableCollection<ExerciseTable>>();
+		public ObservableCollection<ExerciseDataObject> ExerciseList {
+			get => Get<ObservableCollection<ExerciseDataObject>>();
 			set => Set(value);
 		}
 
@@ -61,6 +54,8 @@ namespace SportHelper.BL.ViewModels.Training {
 			set => Set(value);
 		}
 
+		CurrentUserDataObject _currUser;
+
 		public ICommand PreparationMinus => MakeCommand(PreparationMinusExecute);
 		public ICommand PreparationPlus => MakeCommand(PreparationPlusExecute);
 		public ICommand PerformanceMinus => MakeCommand(PerformanceMinusExecute);
@@ -71,17 +66,53 @@ namespace SportHelper.BL.ViewModels.Training {
 		public ICommand RepeatPlus => MakeCommand(RepeatPlusExecute);
 
 		public ICommand AddingExercise => MakeCommand(AddingExerciseExecute);
-		public ICommand SaveTraining => MakeCommand(SaveTrainingExecute);
+		public ICommand SaveTraining => new Command(execute: async () => {
 
-		public override Task OnPageAppearing() {
+			if(_currUser.Id_training == 0) {
+				await DataServices.SportHelperDataService.ExecuteAsync("INSERT INTO TrainingTable(NameTraining, id_account) VALUES('" + NameTraining + "', " + _currUser.Id_account + ")", CancellationToken);
+				var idTrainingEnd = await DataServices.SportHelperDataService.GetTrainingAsync("SELECT * FROM TrainingTable ORDER BY id_training DESC LIMIT 1", CancellationToken);
+				foreach (var item in ExerciseList) {
+					await DataServices.SportHelperDataService.ExecuteAsync("INSERT INTO ExerciseTable(NameExercise, TimePrepare, TimeWorking, TimeRest, Circle, id_training) " +
+					"Values('" + item.NameExercise + "', " + item.TimePrepare + "," + item.TimeWorking + ", " + item.TimeRest + ", " + item.Cirle + ", " + idTrainingEnd.Data[0].Id + ")", CancellationToken);
+
+				}
+				NavigateTo(AppPages.ListTraining);
+			}
+			else {
+				foreach (var item in ExerciseList) {
+					if (item.Id >= 10000) {
+						await DataServices.SportHelperDataService.ExecuteAsync("INSERT INTO ExerciseTable(NameExercise, TimePrepare, TimeWorking, TimeRest, Circle, id_training) " +
+						"Values('" + item.NameExercise + "', " + item.TimePrepare + "," + item.TimeWorking + ", " + item.TimeRest + ", " + item.Cirle + ", " + _currUser.Id_training + ")", CancellationToken);
+					}
+					else {
+						await DataServices.SportHelperDataService.ExecuteAsync("" +
+							"UPDATE ExerciseTable SET	" +
+							"NameExercise = '" + item.NameExercise + "'," +
+							"TimePrepare = " + item.TimePrepare + "," +
+							"TimeWorking = " + item.TimeWorking + "," +
+							"TimeRest = " + item.TimeRest + "," +
+							"Circle = " + item.Cirle + " " +
+							"WHERE Id = " + item.Id, CancellationToken);
+					}
+				}
+
+			}
+
+			
+		});
+
+		public async override Task OnPageAppearing() {
 			PreparationEntry = "00:05";
 			PerformanceEntry = "00:05";
 			RelaxationEntry = "00:05";
 			RepeatEntry = "0";
-			var currentTraining = _dataBase.db.Query<ExerciseTable>("SELECT * FROM ExerciseTable WHERE id_training = " + _dataBase.GetUser().Id_training);
-			foreach (var curr in currentTraining) {
-				NameTraining = _dataBase.db.Query<TrainingTable>("SELECT * FROM TrainingTable Where id_training = " + _dataBase.GetUser().Id_training)[0].NameTraining;
-				ExerciseList.Add(new ExerciseTable {
+			var currUser = await DataServices.SportHelperDataService.GetCurrentUserAsync("SELECT * FROM CurrentUserTable", CancellationToken);
+			_currUser = currUser.Data[0];
+			var currentTraining = await DataServices.SportHelperDataService.GetExerciseAsync("SELECT * FROM ExerciseTable WHERE id_training = " + _currUser.Id_training, CancellationToken);
+			var tmp = await DataServices.SportHelperDataService.GetTrainingAsync("SELECT * FROM TrainingTable Where id_training = " + _currUser.Id_training, CancellationToken);
+			foreach (var curr in currentTraining.Data) {
+				NameTraining = tmp.Data[0].NameTraining;
+				ExerciseList.Add(new ExerciseDataObject {
 					Id = curr.Id,
 					Id_training = curr.Id_training,
 					Cirle = curr.Cirle,
@@ -91,7 +122,6 @@ namespace SportHelper.BL.ViewModels.Training {
 					TimeWorking = curr.TimeWorking
 				});
 			}
-			return base.OnPageAppearing();
 		}
 
 		
@@ -232,37 +262,18 @@ namespace SportHelper.BL.ViewModels.Training {
 		}
 
 		void AddingExerciseExecute() {
-			ExerciseList.Add(new ExerciseTable {	Id = 0,
+			ExerciseList.Add(new ExerciseDataObject {	Id = _i,
 													NameExercise = NameExercise,
 													TimePrepare = Prepare,
 													TimeWorking = Working,
 													TimeRest = Relax,
 													Cirle = Convert.ToInt32(RepeatEntry)
 			});
+			_i++;
 		}
 		void SaveTrainingExecute() {
 
-			var tmp = _dataBase.GetUser();
-			var t = _dataBase.db.Query<TrainingTable>("Select * FROM TrainingTable");
-			_dataBase.db.Execute("Insert into TrainingTable(NameTraining, id_account) Values('" + NameTraining + "', " + tmp.Id_account + ")");
-			var idTrainingEnd = _dataBase.db.Query<TrainingTable>("SELECT * FROM TrainingTable ORDER BY id_training DESC LIMIT 1");
-
-			foreach(var exer in ExerciseList) {
-				if(exer.Id == 0) {
-					_dataBase.db.Execute("INSERT INTO ExerciseTable(NameExercise, TimePrepare, TimeWorking, TimeRest, Circle, id_training) " +
-						"Values('" + exer.NameExercise + "', " + exer.TimePrepare + "," + exer.TimeWorking + ", " + exer.TimeRest + ", " + exer.Cirle + ", " + tmp.Id_account + ")");
-				} else {
-					_dataBase.db.Execute("UPDATE ExerciseTable SET	NameExercise = " + exer.NameExercise + "," +
-										"TimePrepare = " + exer.TimePrepare + "," +
-										"TimeWorking = " + exer.TimeWorking + "," +
-										"TimeRest = " + exer.TimeRest + "," +
-										"Circle = " + exer.Cirle + " " +
-										"WHERE Id = " + exer.Id);
-				}
-			}
-
-			var test = _dataBase.db.Query<TrainingTable>("SELECT * FROM TrainingTable");
-			var test1 = _dataBase.db.Query<ExerciseTable>("SELECT * FROM ExerciseTable");
+			
 		}
 
 		

@@ -1,7 +1,5 @@
 using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Text;
 using System.Windows.Input;
 using Xamarin.Forms;
 
@@ -60,10 +58,6 @@ namespace SportHelper.UI.Controls {
 		protected override void OnBindingContextChanged() {
 			base.OnBindingContextChanged();
 			BindingContext = AssociatedObject.BindingContext;
-		}
-
-		void onListTapped(object sender, TappedEventArgs e) {
-
 		}
 
 		void OnListViewSelectedItem(object sender, SelectedItemChangedEventArgs e) {
