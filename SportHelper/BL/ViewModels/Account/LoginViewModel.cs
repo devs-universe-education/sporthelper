@@ -44,10 +44,17 @@ namespace SportHelper.BL.ViewModels.Account {
 		}
 
 		public override async Task OnPageAppearing() {
+			State = PageState.Loading;
 			await DataServices.SportHelperDataService.CreateCurrentUserAsync(CancellationToken);
-			var test = await DataServices.SportHelperDataService.GetCurrentUserAsync("Select * From CurrentUserTable", CancellationToken);
-			if(test.Data[0].Remember == true) {
-				NavigateTo(AppPages.MainMenu);
+			var currUser= await DataServices.SportHelperDataService.GetCurrentUserAsync("Select * From CurrentUserTable", CancellationToken);
+			if (currUser.IsValid) {
+				State = PageState.Normal;
+				if (currUser.Data[0].Remember == true) {
+					NavigateTo(AppPages.MainMenu);
+				}
+			}
+			else {
+				State = PageState.Error;
 			}
 		}
 

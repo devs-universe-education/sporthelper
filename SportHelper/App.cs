@@ -10,6 +10,7 @@ namespace SportHelper {
 
 		public App ()
 		{
+
 			DialogService.Init(this);
 			NavigationService.Init(this);
 			DataServices.Init(false, DependencyService.Get<IDataBaseConnection>().GetdbPath());

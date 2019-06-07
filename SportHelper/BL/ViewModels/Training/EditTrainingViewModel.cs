@@ -11,9 +11,20 @@ namespace SportHelper.BL.ViewModels.Training {
 	class EditTrainingViewModel : BaseViewModel {
 
 		int _i = 10000;
-		public int Prepare = 5;
-		public int Relax = 5;
-		public int Working = 5;
+		public int Prepare;
+		public int Relax;
+		public int Working;
+
+		void ResetTime() {
+			Prepare = 5;
+			Relax = 5;
+			Working = 5;
+			PreparationEntry = "00:05";
+			PerformanceEntry = "00:05";
+			RelaxationEntry = "00:05";
+			RepeatEntry = "0";
+			NameExercise = "";
+		}
 
 		public EditTrainingViewModel() {
 			ExerciseList = new ObservableCollection<ExerciseDataObject>() { };
@@ -122,10 +133,7 @@ namespace SportHelper.BL.ViewModels.Training {
 		
 
 		public async override Task OnPageAppearing() {
-			PreparationEntry = "00:05";
-			PerformanceEntry = "00:05";
-			RelaxationEntry = "00:05";
-			RepeatEntry = "0";
+			ResetTime();
 			var currUser = await DataServices.SportHelperDataService.GetCurrentUserAsync("SELECT * FROM CurrentUserTable", CancellationToken);
 			_currUser = currUser.Data[0];
 			var currentTraining = await DataServices.SportHelperDataService.GetExerciseAsync("SELECT * FROM ExerciseTable WHERE id_training = " + _currUser.Id_training, CancellationToken);
@@ -289,6 +297,7 @@ namespace SportHelper.BL.ViewModels.Training {
 													TimeRest = Relax,
 													Cirle = Convert.ToInt32(RepeatEntry)
 			});
+			ResetTime();
 			_i++;
 		}
 

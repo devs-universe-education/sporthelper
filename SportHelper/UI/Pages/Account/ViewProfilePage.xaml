@@ -160,7 +160,7 @@
 				Grid.ColumnSpan="2"/>
 
 
-			<Button Text="go to StatProfile"
+			<Button Text="Статистика"
 				VerticalOptions="CenterAndExpand"
 				HorizontalOptions="CenterAndExpand"
 				Command="{Binding GoToStatProfile} "
