@@ -13,12 +13,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="DataServices\Rest\" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
+    <PackageReference Include="sqlite-net-pcl" Version="1.5.231" />
+    <PackageReference Include="SQLite.Net-PCL" Version="3.1.1" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
-    <PackageReference Include="SQLite.Net-PCL" Version="3.1.1" />
+    <Folder Include="DataServices\Rest\" />
   </ItemGroup>
 
 </Project>
