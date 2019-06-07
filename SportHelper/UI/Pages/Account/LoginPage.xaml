@@ -78,7 +78,7 @@
 				Text="Авторизоваться"
 				BackgroundColor="#84cded"
 				TextColor="White"
-				Command="{Binding GetUserAutorisation}"/>
+				Command="{Binding UserAutorisation}"/>
 
 			<Button
 				Grid.Column="2"
