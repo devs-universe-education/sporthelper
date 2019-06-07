@@ -1,22 +1,14 @@
-using System;
-using System.Collections.ObjectModel;
 using System.Timers;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using SportHelper.BL.DB;
-using SportHelper.BL.Model;
-using SportHelper.DAL.DataObjects;
 using SportHelper.DAL.DataServices;
-using Xamarin.Forms;
 
 namespace SportHelper.BL.ViewModels.Training {
 	class StartTrainingViewModel : BaseViewModel {
 
 		public ICommand StartTimer => MakeCommand(StartTimerExecute);
 		public ICommand StopTimer => MakeCommand(StopTimerExecute);
-		public ICommand Test => MakeCommand(TestExecute);
 
-		DataBaseConnection _dataBase = new DataBaseConnection();
 		int _currentCirle = 0;
 		int _currentStep = 0;
 		int _currentExercise = 0;
@@ -33,17 +25,6 @@ namespace SportHelper.BL.ViewModels.Training {
 		string[] _nameExercise;
 		int[] _cirle;
 
-
-		public ObservableCollection<test> Itemsa {
-			get => Get<ObservableCollection<test>>();
-			set => Set(value);
-			
-		}
-
-		public test tmp {
-			get => Get<test>();
-			set => Set(value);
-		}
 
 		public string Timer {
 			get => Get<string>();
@@ -70,15 +51,15 @@ namespace SportHelper.BL.ViewModels.Training {
 			set => Set(value);
 		}
 
-		public StartTrainingViewModel() {
+		public async override Task OnPageAppearing() {
 			_timer = new Timer();
-			Itemsa = new ObservableCollection<test>();
 			var i = 0;
-			var tmp = _dataBase.db.Query<ExerciseTable>("Select * From ExerciseTable Where id_training = " + _dataBase.GetUser().Id_training);
-			_exercises = new double[tmp.Count, 3];
-			_nameExercise = new string[tmp.Count];
-			_cirle = new int[tmp.Count];
-			foreach(var t in tmp) {
+			var currUser = await DataServices.SportHelperDataService.GetCurrentUserAsync("SELECT * FROM CurrentUserTable", CancellationToken);
+			var tmp = await DataServices.SportHelperDataService.GetExerciseAsync("Select * From ExerciseTable Where id_training = " + currUser.Data[0].Id_training, CancellationToken);
+			_exercises = new double[tmp.Data.Count, 3];
+			_nameExercise = new string[tmp.Data.Count];
+			_cirle = new int[tmp.Data.Count];
+			foreach (var t in tmp.Data) {
 				_exercises[i, 0] = t.TimePrepare;
 				_exercises[i, 1] = t.TimeWorking;
 				_exercises[i, 2] = t.TimeRest;
@@ -88,8 +69,10 @@ namespace SportHelper.BL.ViewModels.Training {
 			}
 			_currentTime = _exercises[0, 0];
 			SetTimer();
-			
+		}
 
+		public StartTrainingViewModel() {
+			
 		}
 
 
@@ -170,14 +153,5 @@ namespace SportHelper.BL.ViewModels.Training {
 			_timer.Stop();
 		}
 
-		void TestExecute() {
-			Itemsa.Add(new test { id = "1", name = "b" });
-		}
-
-
-		public class test {
-			public string name;
-			public string id;
-		}
 	}
 }

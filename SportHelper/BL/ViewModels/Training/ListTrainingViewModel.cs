@@ -1,90 +1,88 @@
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using SportHelper.BL.Model;
 using SportHelper.DAL.DataObjects;
 using SportHelper.DAL.DataServices;
-using SportHelper.Helpers;
 using Xamarin.Forms;
-using SportHelper.BL.ViewModels;
-using System;
-using SQLite;
-using SportHelper.BL.DB;
 
 namespace SportHelper.BL.ViewModels.Training {
 
 	public class ListTrainingViewModel : BaseViewModel {
-		DataBaseConnection _dataBase = new DataBaseConnection();
 
-		public ICommand CreateNewTraining => MakeCommand(CreateNewTrainingExecute);
-		public ICommand EditTraining => MakeCommand(EditTrainingExecute);
-		public ICommand GoToStartTraining => MakeCommand(GoToStartTrainingExecute);
-		public ICommand SampleCommand => MakeCommand(OnSampleCommand);
+		public ICommand CreateNewTraining => new Command(execute: async () => {
+			await DataServices.SportHelperDataService.ExecuteAsync("UPDATE CurrentUserTable SET id_training = 0 WHERE id_user = 1", CancellationToken);
+			NavigateTo(AppPages.EditTraining);
+		});
 
-		public ObservableCollection<TrainingTable> TrainingList {
-			get => Get<ObservableCollection<TrainingTable>>();
+		public ICommand EditTraining => new Command(execute: async () => {
+			if (SelectTraining != null) {
+				var selectedTraining = await DataServices.SportHelperDataService.GetTrainingAsync("SELECT * FROM TrainingTable " +
+																		"WHERE NameTraining = '" + SelectTraining.NameTraining + "' AND id_account = " + _currUser.Id_account, CancellationToken);
+				await DataServices.SportHelperDataService.ExecuteAsync("UPDATE CurrentUserTable SET id_training = " + selectedTraining.Data[0].Id + " WHERE id_user = 1", CancellationToken);
+				NavigateTo(AppPages.EditTraining);
+			}
+			else {
+				await ShowAlert("", "Выберите тренировку из списка, которую хотите изменить", "OK");
+			}
+		});
+
+		public ICommand GoToStartTraining => new Command(execute: async () => {
+			if (SelectTraining != null) {
+				var currTraining = await DataServices.SportHelperDataService.GetTrainingAsync("Select * From TrainingTable Where NameTraining = '" + SelectTraining.NameTraining + "'", CancellationToken);
+				await DataServices.SportHelperDataService.ExecuteAsync("UPDATE CurrentUserTable SET id_training = " + currTraining.Data[0].Id + "  Where id_user = 1", CancellationToken);
+				NavigateTo(AppPages.StartTraining);
+			}
+			else {
+				await ShowAlert("", "Выберите тренировку", "Ok");
+			}
+		});
+
+		public ICommand DeleteTraining => new Command(execute: async () => {
+			if (SelectTraining != null) {
+				await DataServices.SportHelperDataService.DeleteTrainingAsync(SelectTraining.Id, CancellationToken);
+				var tmp = await DataServices.SportHelperDataService.GetTrainingAsync("SELECT * FROM TrainingTable Where id_account = " + _currUser.Id_account, CancellationToken);
+				TrainingList.Clear();
+				foreach (var item in tmp.Data) {
+					TrainingList.Add(new TrainingDataObject {
+						Id = item.Id,
+						Id_account = item.Id_account,
+						NameTraining = item.NameTraining
+					});
+				}
+			}
+			else {
+				await ShowAlert("", "Выберите тренировку, которое хотите удалить", "Ok");
+			}
+		});
+
+		public ObservableCollection<TrainingDataObject> TrainingList {
+			get => Get<ObservableCollection<TrainingDataObject>>();
 			set => Set(value);
 		}
 
-		public TrainingTable SelectTraining {
-			get => Get<TrainingTable>();
+		public TrainingDataObject SelectTraining {
+			get => Get<TrainingDataObject>();
 			set => Set(value);
 		}
 
-		public ListTrainingViewModel() {
+		CurrentUserDataObject _currUser;
 
-			TrainingList = new ObservableCollection<TrainingTable>();
-			var tmp = _dataBase.db.Query<TrainingTable>("SELECT * FROM TrainingTable");
+		public async override Task OnPageAppearing() {
+			var currUser = await DataServices.SportHelperDataService.GetCurrentUserAsync("SELECT * FROM CurrentUserTable", CancellationToken);
+			_currUser = currUser.Data[0];
+			var tmp = await DataServices.SportHelperDataService.GetTrainingAsync("SELECT * FROM TrainingTable Where id_account = " + _currUser.Id_account , CancellationToken);
 			TrainingList.Clear();
-			foreach(var training in tmp) {
-				TrainingList.Add(new TrainingTable {Id = training.Id,
-					Id_account = training.Id_account,
-					NameTraining = training.NameTraining,
+			foreach (var item in tmp.Data) {
+				TrainingList.Add(new TrainingDataObject {
+					Id = item.Id,
+					Id_account = item.Id_account,
+					NameTraining = item.NameTraining
 				});
 			}
 		}
 
-		
-
-		
-
-		void EditTrainingExecute() {
-			if (SelectTraining != null) {
-				var currentUser = _dataBase.GetUser();
-				var selectedTraning = _dataBase.db.Query<TrainingTable>("SELECT * FROM TrainingTable " +
-																		"WHERE NameTraining = '" + SelectTraining.NameTraining + "' AND id_account = " + currentUser.Id_account);
-				_dataBase.db.Execute("UPDATE CurrentUserTable SET id_training = " + selectedTraning[0].Id + " WHERE id_user = 1");
-				NavigateTo(AppPages.EditTraining);
-			}
-			else {
-				ShowAlert("","Выберите тренировку из списка, которую хотите изменить","OK");
-			}	
-		}
-
-		void CreateNewTrainingExecute() {
-			_dataBase.db.Execute("UPDATE CurrentUserTable SET id_training = 0 WHERE id_user = 1");
-			NavigateTo(AppPages.EditTraining);
-		}
-
-		void GoToStartTrainingExecute() {
-			/*_dataBase.db.Execute("INSERT INTO TrainingTable (NameTraining, id_account) VALUES ('Понедельник', 1)");
-			_dataBase.db.Execute("INSERT INTO TrainingTable (NameTraining, id_account) VALUES ('Среда', 1)");
-			_dataBase.db.Execute("INSERT INTO ExerciseTable (NameExercise, TimePrepare, TimeRest, TimeWorking, Circle, id_training) VALUES ('Ноги', 5, 15, 20, 2, 1)");
-			_dataBase.db.Execute("INSERT INTO ExerciseTable (NameExercise, TimePrepare, TimeRest, TimeWorking, Circle, id_training) VALUES ('Плечи', 7, 10, 15, 3, 1)");
-			_dataBase.db.Execute("INSERT INTO ExerciseTable (NameExercise, TimePrepare, TimeRest, TimeWorking, Circle, id_training) VALUES ('Грудь', 10, 8, 15, 3, 2)");
-			_dataBase.db.Execute("INSERT INTO ExerciseTable (NameExercise, TimePrepare, TimeRest, TimeWorking, Circle, id_training) VALUES ('Спина', 7, 10, 15, 3, 2)");*/
-			if (SelectTraining != null) {
-				var currUser = _dataBase.GetUser();
-				var currTrain = _dataBase.db.Query<TrainingTable>("Select * From TrainingTable Where NameTraining = '" + SelectTraining.NameTraining + "'");
-				_dataBase.db.Execute("UPDATE CurrentUserTable SET id_training = " + currTrain[0].Id + "  Where id_user = 1");
-				NavigateTo(AppPages.StartTraining);
-			}
-		}
-
-		void OnSampleCommand() {
-			ShowAlert("", "Вы выбрали элемент", "Ok");
+		public ListTrainingViewModel() {
+			TrainingList = new ObservableCollection<TrainingDataObject>();
 		}
 	}
 }

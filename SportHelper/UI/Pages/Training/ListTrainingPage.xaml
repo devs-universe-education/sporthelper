@@ -105,7 +105,7 @@
 				BackgroundColor="#84cded"
 				TextColor="White"
 				Text="Удалить"
-                Command="{Binding CreateNewTraining}"/>
+                Command="{Binding DeleteTraining}"/>
 		</Grid>
 	</ContentPage.Content>
 </pages:BasePage>
