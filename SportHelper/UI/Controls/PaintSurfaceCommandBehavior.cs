@@ -1,13 +1,9 @@
 using SkiaSharp.Views.Forms;
 using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Text;
 using System.Windows.Input;
 using Xamarin.Forms;
 
-namespace SportHelper.UI.Controls
-{
+namespace SportHelper.UI.Controls {
 	public class PaintSurfaceCommandBehavior : Behavior<SKCanvasView> {
 
 		public static readonly BindableProperty CommandProperty =
